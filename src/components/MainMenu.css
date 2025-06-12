@@ -1,0 +1,29 @@
+.pantalla {
+  position: relative;
+  /* Your existing styles for the main screen */
+}
+
+
+.instructions-button {
+  /* Cambiamos 'absolute' por 'fixed' */
+  position: fixed; 
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  color: #333;
+  /* Añadimos z-index para asegurar que esté por encima de otros elementos */
+  z-index: 100; 
+}
+
+.question-mark {
+  font-weight: bold;
+}
