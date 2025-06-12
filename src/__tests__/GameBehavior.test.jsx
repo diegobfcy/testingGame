@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import App from "../App";
 
+
 jest.mock("../components/MainMenu", () => (props) => (
   <button onClick={props.onStartGame}>Iniciar Juego</button>
 ));
