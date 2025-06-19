@@ -1,11 +1,33 @@
 .pantalla {
   position: relative;
-  /* Your existing styles for the main screen */
+  width: 100vw;
+  height: 100vh;
+  background-image: url('../assets/backgroundgif2.gif');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white; 
+  isolation: isolate;
+}
+
+.pantalla::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); 
+  z-index: -1; 
 }
 
 
 .instructions-button {
-  /* Cambiamos 'absolute' por 'fixed' */
   position: fixed; 
   top: 20px;
   right: 20px;
@@ -20,8 +42,7 @@
   align-items: center;
   font-size: 24px;
   color: #333;
-  /* Añadimos z-index para asegurar que esté por encima de otros elementos */
-  z-index: 100; 
+  z-index: 100;
 }
 
 .question-mark {
