@@ -45,24 +45,23 @@ function Game({ onGameEnd }) {
     let newTarget;
 
     const isSpecial = Math.random() < 0.25;
-    const baseDuration = isSpecial ? 2.5 : 5.0; // Duración base (rápido vs normal)
+    const baseDuration = isSpecial ? 2.5 : 5.0; 
 
     // 1. CÁLCULO DE VELOCIDAD DINÁMICA
-    // Por cada 5 puntos, reducimos la duración en 0.25s.
-    // Usamos Math.max para que la duración nunca sea demasiado baja (imposible).
+
     const duration = Math.max(1.0, baseDuration - Math.floor(score / 5) * 0.25);
 
     if (isSpecial) {
       newTarget = {
-        id: Date.now(), y: Math.random() * 80, direction, image: specialTargetImg, points: 2, duration, // Ya no usamos speedClass
+        id: Date.now(), y: Math.random() * 80, direction, image: specialTargetImg, points: 2, duration, 
       };
     } else {
       newTarget = {
-        id: Date.now(), y: Math.random() * 80, direction, image: targetImg, points: 1, duration, // Ya no usamos speedClass
+        id: Date.now(), y: Math.random() * 80, direction, image: targetImg, points: 1, duration, 
       };
     }
     setTargets([newTarget]);
-  }, [score]); // <-- Añadimos 'score' como dependencia para que la velocidad se recalcule
+  }, [score]); 
 
   useEffect(() => {
     spawnNewTarget();
@@ -95,7 +94,7 @@ function Game({ onGameEnd }) {
         ${isScreenFlashing ? "screen-flash" : ""}
       `}
     >
-      {/* 2. NUEVO MENÚ DE PAUSA SUPERPUESTO */}
+
       {isPaused && (
         <div className="pause-overlay">
           <h1>Juego en espera</h1>
