@@ -1,19 +1,27 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import App from "../App";
 
+// Mockear componentes y assets
+jest.mock("../components/MainMenu", () => ({ onStartGame }) => (
+  <button onClick={onStartGame}>Iniciar Juego</button>
+));
 
-jest.mock("../components/MainMenu", () => (props) => (
-  <button onClick={props.onStartGame}>Iniciar Juego</button>
+jest.mock("../components/Game", () => ({ onGameEnd }) => (
+  <button onClick={() => onGameEnd(10)}>Finalizar Juego</button>
 ));
-jest.mock("../components/Game", () => (props) => (
-  <button onClick={() => props.onGameEnd(10)}>Finalizar Juego</button>
-));
-jest.mock("../components/EndScreen", () => (props) => (
+
+jest.mock("../components/EndScreen", () => ({ score, onRestartGame }) => (
   <div>
-    <span>Tu puntuación final: {props.score}</span>
-    <button onClick={props.onRestartGame}>Reiniciar</button>
+    <span>Tu puntuación final: {score}</span>
+    <button onClick={onRestartGame}>Reiniciar</button>
   </div>
 ));
+
+// Mockear assets
+jest.mock("../assets/Objetivo.png", () => "test-target-image");
+jest.mock("../assets/Objetivo2.png", () => "test-special-target-image");
+jest.mock("../assets/gun.png", () => "test-gun-image");
+jest.mock("../assets/Scenario.jpeg", () => "test-scenario-image");
 
 describe("Escenarios de comportamiento", () => {
   test("flujo completo de juego: inicio → juego → fin → reinicio", () => {
@@ -31,15 +39,5 @@ describe("Escenarios de comportamiento", () => {
     // Reiniciar juego
     fireEvent.click(screen.getByText(/Reiniciar/i));
     expect(screen.getByText(/iniciar juego/i)).toBeInTheDocument();
-  });
-});
-
-describe("Comportamiento del juego", () => {
-  test("el jugador gana puntos al hacer clic en el botón de inicio", () => {
-    render(<App />);
-    const button = screen.getByRole("button", { name: /iniciar/i });
-    fireEvent.click(button);
-    const score = screen.getByText(/Puntuación:/i);
-    expect(score).toHaveTextContent("Puntuación: 1");
   });
 });

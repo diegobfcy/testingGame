@@ -44,6 +44,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^30.0.0",
     "jest-environment-jsdom": "^30.0.0",
+    "jest-html-reporters": "^3.1.7",
     "vite": "^6.3.5"
   }
 }
