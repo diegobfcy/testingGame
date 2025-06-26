@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "jest",
     "test:watch": "jest --watch",
-    "test:acceptance": "cucumber-js"
+    "test:acceptance": "cucumber-js",
+    "test:report": "jest --coverage && open coverage/lcov-report/index.html"
   },
   "dependencies": {
     "react": "^19.1.0",
@@ -44,7 +45,6 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^30.0.0",
     "jest-environment-jsdom": "^30.0.0",
-    "jest-html-reporters": "^3.1.7",
     "vite": "^6.3.5"
   }
 }
