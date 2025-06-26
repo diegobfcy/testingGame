@@ -87,13 +87,16 @@ function Game({ onGameEnd }) {
 
   // --- RENDERIZADO ---
   return (
+
     <div
-      className={`
-        game-container has-custom-cursor
-        ${isPaused ? "paused" : ""}
-        ${isScreenFlashing ? "screen-flash" : ""}
-      `}
-    >
+    data-testid="game-container"
+    className={`
+      game-container has-custom-cursor
+      ${isPaused ? "paused" : ""}
+      ${isScreenFlashing ? "screen-flash" : ""}
+    `}
+  >
+      
 
       {isPaused && (
         <div className="pause-overlay">
@@ -115,27 +118,35 @@ function Game({ onGameEnd }) {
           Pausa
         </button>
       </div>
+      
 
       <div className="scenario" style={{ backgroundImage: `url(${scenarioImg})` }}>
-        {targets.map((target) => (
-          <div
-            key={target.id}
-            className={`target ${target.direction}`} // Quitamos la clase de velocidad
-            style={{
-              backgroundImage: `url(${target.image})`,
-              top: `${target.y}%`,
-              // 4. Aplicamos la duración calculada como un estilo en línea
-              animationDuration: `${target.duration}s`,
-            }}
-            onClick={() => handleTargetClick(target)}
-            onAnimationEnd={handleTargetMiss}
-          />
-        ))}
+      {targets.map((target) => (
+        <div
+          key={target.id}
+          data-testid="target-element"
+          className={`target ${target.direction}`}
+          style={{
+            backgroundImage: `url(${target.image})`,
+            top: `${target.y}%`,
+            animationDuration: `${target.duration}s`,
+          }}
+          onClick={() => handleTargetClick(target)}
+          onAnimationEnd={handleTargetMiss}
+        />
+      ))}
 
-        <div className="player-gun" style={{ backgroundImage: `url(${gunImg})`, ...gunStyle }} />
-      </div>
+      
+      <div 
+        data-testid="gun-element"
+        className="player-gun" 
+        style={{ backgroundImage: `url(${gunImg})`, ...gunStyle }} 
+      />
     </div>
+  </div>
   );
+
+
 }
 
 export default Game;

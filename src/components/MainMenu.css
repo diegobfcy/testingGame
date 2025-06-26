@@ -1,8 +1,13 @@
-.pantalla {
+/* Using a Google Font for better aesthetics */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap');
+
+/* Base container for the main menu */
+.main-menu-container {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background-image: url('../assets/backgroundgif2.gif');
+  /* Replace with your actual GIF path */
+  background-image: url('../assets/backgroundgif2.gif'); 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -11,40 +16,199 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  color: white; 
-  isolation: isolate;
+  color: white;
+  overflow: hidden; /* Ensure no overflow issues */
+  font-family: 'Roboto', sans-serif; /* Modern fallback font */
 }
 
-.pantalla::before {
+/* Overlay for better text readability on top of the GIF */
+.main-menu-container::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); 
-  z-index: -1; 
+  background-color: rgba(0, 0, 0, 0.65); /* Darker, slightly transparent overlay */
+  z-index: 1; /* Below content, above background */
 }
 
+/* Content wrapper to ensure it's above the overlay */
+.menu-content {
+  position: relative;
+  z-index: 2; /* Ensure content is above the overlay */
+  background-color: rgba(0, 0, 0, 0.4); /* Slightly transparent background for the content box */
+  padding: 40px 60px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.3); /* Subtle neon glow effect */
+  backdrop-filter: blur(5px); /* Frosted glass effect */
+  animation: fadeInScale 1s ease-out forwards; /* Simple animation on load */
+}
 
-.instructions-button {
-  position: fixed; 
-  top: 20px;
-  right: 20px;
-  width: 40px;
-  height: 40px;
+/* Game Title Styling */
+.game-title {
+  font-family: 'Press Start 2P', cursive; /* Retro game font */
+  font-size: 4.5em; /* Larger title */
+  color: #ff0077; /* Vibrant pink/red color */
+  margin-bottom: 20px;
+  text-shadow: 0 0 10px #ff0077, 0 0 20px #ff0077, 0 0 30px #ff0077; /* Neon glow */
+  animation: pulseGlow 2s infinite alternate; /* Pulsing glow effect */
+  letter-spacing: 3px;
+}
+
+/* Game Description Styling */
+.game-description {
+  font-size: 1.5em;
+  color: #e0e0e0;
+  margin-bottom: 40px;
+  font-weight: 300;
+}
+
+/* Start Game Button Styling */
+.start-game-button {
+  padding: 18px 45px;
+  font-size: 1.8em;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(45deg, #00c0ff, #007bff); /* Blue gradient */
+  border: none;
+  border-radius: 50px; /* Fully rounded */
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 192, 255, 0.4);
+  transition: all 0.3s ease; /* Smooth transitions for hover effects */
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.start-game-button:hover {
+  background: linear-gradient(45deg, #00aaff, #0069d9); /* Darker gradient on hover */
+  transform: translateY(-5px) scale(1.05); /* Lift and slightly enlarge */
+  box-shadow: 0 12px 25px rgba(0, 192, 255, 0.6);
+}
+
+.start-game-button::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3); /* Light ripple effect */
   border-radius: 50%;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease-out, height 0.4s ease-out, opacity 0.4s ease-out;
+}
+
+.start-game-button:hover::after {
+  width: 200%;
+  height: 200%;
+  opacity: 1;
+}
+
+/* Instructions Button Styling */
+.instructions-button {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background-color: #f7b731; /* Bright orange/yellow */
+  border: 3px solid #ff8c00; /* Darker orange border */
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 24px;
+  font-size: 2.5em;
   color: #333;
-  z-index: 100;
+  font-weight: bold;
+  z-index: 100; /* Ensure it's always on top */
+  box-shadow: 0 4px 15px rgba(247, 183, 49, 0.5);
+  transition: all 0.2s ease;
 }
 
-.question-mark {
-  font-weight: bold;
+.instructions-button:hover {
+  background-color: #ff8c00; /* Darker on hover */
+  transform: scale(1.1) rotate(5deg); /* Slight scale and rotation */
+  box-shadow: 0 6px 20px rgba(255, 140, 0, 0.7);
+}
+
+/* Keyframe Animations */
+@keyframes pulseGlow {
+  0% {
+    text-shadow: 0 0 10px #ff0077, 0 0 20px #ff0077;
+  }
+  100% {
+    text-shadow: 0 0 15px #ff0077, 0 0 30px #ff0077, 0 0 45px #ff0077;
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .game-title {
+    font-size: 3em; /* Smaller title on mobile */
+  }
+
+  .game-description {
+    font-size: 1.2em;
+  }
+
+  .start-game-button {
+    padding: 15px 35px;
+    font-size: 1.5em;
+  }
+
+  .instructions-button {
+    width: 45px;
+    height: 45px;
+    font-size: 2em;
+    top: 15px;
+    right: 15px;
+  }
+
+  .menu-content {
+    padding: 30px 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .game-title {
+    font-size: 2.2em;
+    word-break: break-word; /* Allow long words to break */
+  }
+
+  .game-description {
+    font-size: 1em;
+  }
+
+  .start-game-button {
+    padding: 12px 30px;
+    font-size: 1.3em;
+  }
+
+  .instructions-button {
+    width: 40px;
+    height: 40px;
+    font-size: 1.8em;
+    top: 10px;
+    right: 10px;
+  }
+
+  .menu-content {
+    padding: 20px 30px;
+  }
 }
