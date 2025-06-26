@@ -20,13 +20,7 @@
   color: #646cff;
 }
 
-/* Estilos del juego principal para PANTALLA COMPLETA */
-.game-container {
-  width: 100vw; /* 100% del ancho de la ventana */
-  height: 100vh; /* 100% del alto de la ventana */
-  display: flex;
-  flex-direction: column;
-}
+
 
 .info-bar {
   display: flex;
@@ -39,235 +33,29 @@
   z-index: 10;
 }
 
-.scenario {
-  width: 100%;
-  flex-grow: 1;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  overflow: hidden;
-}
 
 /* --- ANIMACIONES Y ESTILOS DEL OBJETIVO MODIFICADOS --- */
 
-/* Animación de Izquierda a Derecha */
-@keyframes move-ltr {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(100vw); } /* Moverse a lo largo de toda la pantalla */
-}
-
-/* Animación de Derecha a Izquierda */
-@keyframes move-rtl {
-  from { transform: translateX(100vw); }
-  to { transform: translateX(-100%); }
-}
-
-/* El resto de estilos de .target, .game-container.paused, etc., se mantiene igual */
-.target {
-  position: absolute;
-  width: 140px;
-  height: 140px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  animation-timing-function: linear;
-}
-/* Aplicamos la animación específica según la clase que pusimos en React */
-.target.ltr {
-  animation-name: move-ltr;
-}
-
-.target.rtl {
-  animation-name: move-rtl;
-}
-
-.target:hover {
-  filter: brightness(1.2) drop-shadow(0 0 8px white);
-}
 
 
 
-/* Estilos del juego principal para PANTALLA COMPLETA */
-/* 1. Añadimos la propiedad 'cursor' para cambiar el puntero */
-.game-container.has-custom-cursor {
-  cursor: crosshair;
-  
-}
 
-.game-container {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
 
-.info-bar {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 20px;
-  background-color: rgba(26, 26, 26, 0.8);
-  color: white;
-  font-size: 1.5em;
-  position: relative;
-  z-index: 10;
-}
-
-.scenario {
-  width: 100%;
-  flex-grow: 1;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  overflow: hidden;
-}
 
 /* --- ESTILOS DE OBJETIVOS Y ARMA --- */
 
-@keyframes move-ltr {
-  from { transform: translateX(-150px); } /* Empezar un poco más afuera */
-  to { transform: translateX(100vw); }
-}
-
-@keyframes move-rtl {
-  from { transform: translateX(100vw); }
-  to { transform: translateX(-150px); }
-}
-
-.target {
-  position: absolute;
-  width: 140px;
-  height: 140px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  
-  /* Ya no necesita 'cursor: pointer' porque todo el contenedor lo tiene */
-  animation-timing-function: linear;
-}
 
 
-.target.ltr {
-  animation-name: move-ltr;
-}
-.target.rtl {
-  animation-name: move-rtl;
-}
-
-.target:hover {
-  filter: brightness(1.2) drop-shadow(0 0 8px white);
-}
-
-/* 3. Estilos para el arma del jugador */
-.player-gun {
-  position: absolute;
-  bottom: -20px; /* Un poco salido para un mejor efecto */
-  right: 0;
-  width: 650px; /* Ajusta el tamaño de tu arma */
-  height: 650px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: bottom right;
-  z-index: 5; /* Por encima del escenario pero debajo de la info-bar */
-  /* Transición suave para el movimiento */
-  transition: transform 0.1s ease-out;
-}
 
 
-/* --- NUEVOS ESTILOS PARA PAUSA Y FLASH --- */
-
-/* 1. Regla para pausar la animación de los objetivos */
-/* Cuando el contenedor tiene la clase 'paused', afecta a los 'target' dentro */
-.game-container.paused .target {
-  animation-play-state: paused;
-}
-
-/* Primero, nos aseguramos de que el contenedor principal pueda anclar 
-   a nuestro pseudo-elemento de flash. */
-.game-container {
-  /* ... (todas las demás propiedades se mantienen) ... */
-  position: relative; /* ¡Esta línea es importante! */
-}
-
-/* Creamos una animación de flash que aparece y desaparece. */
-@keyframes flash-animation {
-  0% { opacity: 0; }
-  50% { opacity: 1; } /* El punto más brillante del flash */
-  100% { opacity: 0; }
-}
-
-/* Ahora, creamos la capa de flash usando un pseudo-elemento ::before */
-.game-container.screen-flash::before {
-  content: ''; /* Obligatorio para que se muestre el pseudo-elemento */
-  position: absolute; /* Lo posicionamos sobre el contenedor */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  
-  /* El color del flash. Puedes ajustar la opacidad (el último valor) */
-  background-color: rgba(255, 25, 25, 0.4);
-  
-  /* Lo ponemos por encima del escenario pero debajo de la UI (info-bar y arma) */
-  z-index: 2; 
-  
-  /* Hacemos que no intercepte los clics del ratón */
-  pointer-events: none;
-
-  /* Aplicamos la animación que creamos */
-  animation-name: flash-animation;
-  animation-duration: 0.8s; /* Debe coincidir con el setTimeout en Game.jsx */
-  animation-timing-function: ease-out;
-}
-
-/* 3. Estilo para el botón de pausa (opcional) */
-.pause-button {
-  padding: 5px 15px;
-  font-size: 0.8em; /* Un poco más pequeño que el texto de la info */
-  background-color: #333;
-  border: 1px solid #777;
-}
-.pause-button:hover {
-  background-color: #555;
-  border-color: #999;
-}
 
 
-.pause-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  
-  /* Fondo oscuro semi-transparente para atenuar el juego */
-  background-color: rgba(0, 0, 0, 0.75);
-  
-  /* Centramos el contenido vertical y horizontalmente */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  
-  /* Aseguramos que esté por encima de todo */
-  z-index: 100;
-}
 
-.pause-overlay h1 {
-  color: white;
-  font-size: 3em;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
-  margin-bottom: 20px;
-}
 
-.resume-button {
-  padding: 15px 30px;
-  font-size: 1.5em;
-  background-color: #4CAF50; /* Verde */
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
 
-.resume-button:hover {
-  background-color: #45a049; /* Verde más oscuro */
-}
+
+
+
+
+
+

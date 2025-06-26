@@ -1,0 +1,125 @@
+/* src/components/EndScreen.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap');
+
+/* El contenedor principal, que ahora se llamará .endscreen-container */
+.endscreen-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('../assets/backgroundgif2.gif'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Superposición oscura para legibilidad */
+.endscreen-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.65);
+  z-index: 1;
+}
+
+/* Caja de contenido con efecto "frosted glass" */
+.endscreen-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding: 50px 70px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(255, 0, 119, 0.4); /* Brillo rosado */
+  backdrop-filter: blur(5px);
+  animation: fadeInScale 1s ease-out forwards;
+}
+
+/* Título "¡Juego Terminado!" */
+.endscreen-content h1 {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 3.5em;
+  color: #ff0077; /* Mismo color que el título principal */
+  margin: 0 0 15px 0;
+  text-shadow: 0 0 10px #ff0077, 0 0 20px #ff0077;
+}
+
+/* Párrafo descriptivo */
+.endscreen-content p {
+  font-family: 'Roboto', sans-serif;
+  font-size: 1.5em;
+  color: #e0e0e0;
+  margin: 0;
+}
+
+/* Puntuación final - ¡El protagonista! */
+.puntuacion-final {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 6em;
+  font-weight: bold;
+  color: #f7b731; /* Amarillo/Dorado neón */
+  text-shadow: 0 0 10px #f7b731, 0 0 25px #f7b731, 0 0 45px #ff8c00;
+  margin: 20px 0 40px 0;
+  line-height: 1;
+}
+
+/* Botón para Jugar de Nuevo - Estilo del botón principal */
+.restart-button {
+  padding: 18px 45px;
+  font-size: 1.8em;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(45deg, #00c0ff, #007bff); /* Gradiente azul */
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 192, 255, 0.4);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.restart-button:hover {
+  background: linear-gradient(45deg, #00aaff, #0069d9);
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 12px 25px rgba(0, 192, 255, 0.6);
+}
+
+/* Animación de entrada (la reutilizamos) */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Media queries para responsividad */
+@media (max-width: 768px) {
+  .endscreen-content h1 { font-size: 2.5em; }
+  .puntuacion-final { font-size: 5em; }
+  .restart-button { font-size: 1.5em; padding: 15px 35px; }
+  .endscreen-content { padding: 40px 50px; }
+}
+
+@media (max-width: 480px) {
+  .endscreen-content h1 { font-size: 1.8em; }
+  .endscreen-content p { font-size: 1.2em; }
+  .puntuacion-final { font-size: 4em; }
+  .restart-button { font-size: 1.2em; padding: 12px 30px; }
+  .endscreen-content { padding: 30px 20px; }
+}

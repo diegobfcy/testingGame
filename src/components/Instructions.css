@@ -1,21 +1,178 @@
+/* src/components/Instructions.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap');
+
+/* --- CAPA DE SUPERPOSICIÓN (OVERLAY) --- */
+/* Esta capa cubre toda la pantalla y difumina el fondo */
 .popup-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1000; /* Siempre encima de todo */
+  
+  /* Fondo oscuro y efecto de cristal que difumina lo que está detrás */
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  
+  /* Centra la ventana de instrucciones */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000;
+
+  /* Animación de entrada */
+  animation: fadeIn 0.3s ease-out forwards;
 }
 
+/* --- VENTANA DE CONTENIDO DE LAS INSTRUCCIONES --- */
 .popup-content {
-  background-color: rgba(0, 0, 0, 0.80);
-  padding: 20px;
-  border-radius: 8px;
-  max-width: 500px;
+  font-family: 'Roboto', sans-serif;
+  color: #e0e0e0;
+  
+  /* Estilo "frosted glass" consistente con el resto del UI */
+  background-color: rgba(15, 23, 42, 0.7); /* Un azul oscuro, casi negro */
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(0, 255, 255, 0.4);
+  
+  padding: 2rem 2.5rem;
+  max-width: 700px;
   width: 90%;
+  max-height: 90vh; /* Ocupa máximo el 90% del alto */
+  overflow-y: auto; /* Permite scroll si el contenido es muy largo */
+  
+  /* Animación de escala para la ventana */
+  animation: scaleUp 0.4s ease-out forwards;
+}
+
+/* --- ESTILOS DE TEXTO --- */
+.popup-content h2 {
+  font-family: 'Press Start 2P', cursive;
+  color: #00c0ff; /* Cian neón */
+  font-size: 1.8em;
   text-align: center;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  text-shadow: 0 0 8px #00c0ff;
+}
+
+.popup-content h4 {
+  font-family: 'Press Start 2P', cursive;
+  color: #f7b731; /* Amarillo/Dorado neón */
+  font-size: 1em;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid rgba(247, 183, 49, 0.3);
+  padding-bottom: 0.5rem;
+}
+
+.popup-content p {
+  line-height: 1.6;
+}
+
+.popup-content strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+.popup-content ul {
+  list-style: none; /* Quitamos los puntos por defecto */
+  padding-left: 0;
+}
+
+/* Creamos nuestros propios "bullets" de lista con estilo neón */
+.popup-content li {
+  padding-left: 1.5rem;
+  position: relative;
+  margin-bottom: 0.8rem;
+}
+
+.popup-content li::before {
+  content: '▶'; /* Puedes usar '■', '●', etc. */
+  position: absolute;
+  left: 0;
+  color: #ff0077; /* Rosa neón */
+  font-size: 0.8em;
+  text-shadow: 0 0 5px #ff0077;
+}
+
+/* --- SECCIÓN DE OBJETIVOS --- */
+.instructions-targets {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+}
+
+.target-info {
+  text-align: center;
+}
+
+.target-info img {
+  width: 60px;
+  height: auto;
+  margin-bottom: 0.5rem;
+  /* Efecto de brillo para integrar las imágenes */
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.5));
+}
+
+.target-info p {
+  margin: 0;
+  font-size: 0.9em;
+}
+
+/* --- BOTÓN DE CERRAR --- */
+.close-button {
+  display: block;
+  width: 100%;
+  margin-top: 2rem;
+  padding: 15px 30px;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(45deg, #ff0077, #e6005c); /* Gradiente rosado */
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(255, 0, 119, 0.4);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.close-button:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 12px 25px rgba(255, 0, 119, 0.6);
+}
+
+/* --- ESTILO DE LA BARRA DE SCROLL (opcional, pero un gran detalle) --- */
+.popup-content::-webkit-scrollbar {
+  width: 8px;
+}
+.popup-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+.popup-content::-webkit-scrollbar-thumb {
+  background-color: #00c0ff;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.popup-content::-webkit-scrollbar-thumb:hover {
+  background-color: #26d4ff;
+}
+
+/* --- ANIMACIONES --- */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes scaleUp {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }

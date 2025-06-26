@@ -1,0 +1,171 @@
+/* src/components/LevelSelect.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Roboto:wght@300;400;700&display=swap');
+
+/* --- CAMBIOS PRINCIPALES EN EL CONTENEDOR --- */
+.level-select-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh; /* Altura fija a la de la pantalla */
+  background-image: url('../assets/backgroundgif2.gif'); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  /* 1. Usamos Flexbox para distribuir el espacio vertical */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centrado vertical para un mejor punto de partida */
+  align-items: center;
+  
+  /* 2. Eliminamos el scroll y el padding vertical que pueda interferir */
+  overflow: hidden; 
+  padding: 1rem 2rem; /* Padding horizontal para los bordes */
+  box-sizing: border-box;
+  text-align: center;
+  color: white;
+}
+
+.level-select-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.65);
+  z-index: 1; 
+}
+
+.level-select-title, .levels-grid {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+}
+
+.level-select-title {
+  font-family: 'Press Start 2P', cursive;
+  font-size: clamp(2em, 5vw, 3.5em); /* Fuente responsive */
+  color: #00c0ff;
+  /* Reducimos el margen para dar más espacio a las tarjetas */
+  margin-top: 0;
+  margin-bottom: 5vh; /* Margen basado en la altura de la pantalla */
+  text-shadow: 0 0 8px #00c0ff, 0 0 16px #00c0ff;
+  animation: pulseGlow 2s infinite alternate;
+}
+
+.levels-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Hacemos las tarjetas un poco más pequeñas */
+  gap: clamp(1rem, 2vw, 2rem); /* Gap responsive */
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.level-card {
+  background-color: rgba(0, 0, 0, 0.4); 
+  backdrop-filter: blur(5px);
+  box-shadow: 0 8px 25px rgba(0, 255, 255, 0.2);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  border-radius: 15px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.level-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 12px 35px rgba(0, 255, 255, 0.4);
+}
+
+.level-preview-img {
+  width: 100%;
+  /* Usamos aspect-ratio para que la imagen mantenga su forma sin definir una altura fija */
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+
+.level-card:hover .level-preview-img {
+  opacity: 1;
+}
+
+.level-card-body {
+  padding: clamp(0.8rem, 2vw, 1.2rem); /* Padding responsive */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.level-name {
+  margin-top: 0;
+  font-family: 'Press Start 2P', cursive;
+  color: #f7b731;
+  font-size: clamp(1em, 2.5vw, 1.2em); /* Fuente responsive */
+  margin-bottom: 0.8rem;
+}
+
+.level-description {
+  flex-grow: 1;
+  color: #e0e0e0;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+  line-height: 1.4;
+  font-size: clamp(0.8rem, 2vw, 0.9rem); /* Fuente responsive */
+}
+
+.select-level-button {
+  padding: clamp(10px, 1.5vw, 12px) clamp(20px, 2.5vw, 25px); /* Padding responsive */
+  font-size: clamp(0.8rem, 2vw, 1em); /* Fuente responsive */
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(45deg, #ff0077, #e6005c);
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(255, 0, 119, 0.3);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  align-self: center;
+  margin-top: 1rem;
+}
+
+.select-level-button:hover {
+  background: linear-gradient(45deg, #e6005c, #cc0052);
+  transform: scale(1.1);
+  box-shadow: 0 8px 22px rgba(255, 0, 119, 0.5);
+}
+
+@keyframes pulseGlow {
+  from {
+    text-shadow: 0 0 8px #00c0ff, 0 0 16px #00c0ff;
+  }
+  to {
+    text-shadow: 0 0 12px #00c0ff, 0 0 24px #00c0ff;
+  }
+}
+
+/* 3. Media Query para pantallas MUY CORTAS (ej. móvil en horizontal) */
+@media (max-height: 500px) {
+  .levels-grid {
+    /* Forzamos que las 4 tarjetas se pongan en una sola fila para ahorrar espacio vertical */
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .level-select-title {
+    /* Escondemos el título si realmente no hay espacio */
+    display: none;
+  }
+  .level-name {
+    font-size: 0.8em;
+  }
+  .level-description {
+    /* Escondemos la descripción para que quepa la tarjeta */
+    display: none;
+  }
+  .select-level-button {
+    margin-top: 0.5rem;
+  }
+}

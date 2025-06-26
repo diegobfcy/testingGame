@@ -1,20 +1,25 @@
+// src/components/Game.jsx
+
 import React, { useState, useEffect, useCallback } from "react";
 
-// ... (las importaciones de imágenes no cambian)
-import scenarioImg from "../assets/Scenario.jpeg";
 import targetImg from "../assets/Objetivo.png";
 import specialTargetImg from "../assets/Objetivo2.png";
 import gunImg from "../assets/gun.png";
+import './Game.css';
 
 const GAME_DURATION = 30;
 
-function Game({ onGameEnd }) {
+// 1. Recibimos la nueva prop 'onReturnToMenu'
+function Game({ onGameEnd, levelData, onReturnToMenu }) {
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(GAME_DURATION);
   const [targets, setTargets] = useState([]);
   const [gunStyle, setGunStyle] = useState({});
   const [isPaused, setIsPaused] = useState(false);
   const [isScreenFlashing, setIsScreenFlashing] = useState(false);
+
+  // --- El resto del código de lógica (hooks y handlers) no necesita cambios ---
+  // ... (useEffect, handleMouseMove, spawnNewTarget, etc. se mantienen igual) ...
 
   // --- TEMPORIZADOR Y PAUSA ---
   useEffect(() => {
@@ -43,29 +48,23 @@ function Game({ onGameEnd }) {
   const spawnNewTarget = useCallback(() => {
     const direction = Math.random() < 0.5 ? "ltr" : "rtl";
     let newTarget;
-
     const isSpecial = Math.random() < 0.25;
-    const baseDuration = isSpecial ? 2.5 : 5.0; 
-
-    // 1. CÁLCULO DE VELOCIDAD DINÁMICA
-
-    const duration = Math.max(1.0, baseDuration - Math.floor(score / 5) * 0.25);
+    const baseDuration = isSpecial ? levelData.specialSpeed : levelData.baseSpeed;
+    const duration = baseDuration;
 
     if (isSpecial) {
-      newTarget = {
-        id: Date.now(), y: Math.random() * 80, direction, image: specialTargetImg, points: 2, duration, 
-      };
+      newTarget = { id: Date.now(), y: Math.random() * 80, direction, image: specialTargetImg, points: 2, duration };
     } else {
-      newTarget = {
-        id: Date.now(), y: Math.random() * 80, direction, image: targetImg, points: 1, duration, 
-      };
+      newTarget = { id: Date.now(), y: Math.random() * 80, direction, image: targetImg, points: 1, duration };
     }
     setTargets([newTarget]);
-  }, [score]); 
+  }, [score, levelData]);
 
   useEffect(() => {
-    spawnNewTarget();
-  }, [spawnNewTarget]);
+    if (levelData) {
+      spawnNewTarget();
+    }
+  }, [spawnNewTarget, levelData]);
 
   const handleTargetClick = (targetClicked) => {
     if (isPaused) return;
@@ -74,7 +73,7 @@ function Game({ onGameEnd }) {
   };
 
   const handleTargetMiss = () => {
-    if (isPaused) return; // No penalizar si el juego está en pausa
+    if (isPaused) return;
     setScore((prevScore) => Math.max(0, prevScore - 1));
     setIsScreenFlashing(true);
     setTimeout(() => setIsScreenFlashing(false), 800);
@@ -85,25 +84,29 @@ function Game({ onGameEnd }) {
     setIsPaused((prevPaused) => !prevPaused);
   };
 
-  // --- RENDERIZADO ---
+
+  // --- RENDERIZADO (MODIFICADO) ---
   return (
-
     <div
-    data-testid="game-container"
-    className={`
-      game-container has-custom-cursor
-      ${isPaused ? "paused" : ""}
-      ${isScreenFlashing ? "screen-flash" : ""}
-    `}
-  >
-      
-
+      data-testid="game-container"
+      className={`
+        game-container has-custom-cursor
+        ${isPaused ? "paused" : ""}
+        ${isScreenFlashing ? "screen-flash" : ""}
+      `}
+    >
+      {/* 2. Añadimos el nuevo botón en el menú de pausa */}
       {isPaused && (
         <div className="pause-overlay">
-          <h1>Juego en espera</h1>
-          <button onClick={togglePause} className="resume-button">
-            Reanudar
-          </button>
+          <h1>Juego en Pausa</h1>
+          <div className="pause-buttons-container">
+            <button onClick={togglePause} className="resume-button">
+              Reanudar
+            </button>
+            <button onClick={onReturnToMenu} className="return-menu-button">
+              Volver al Menú
+            </button>
+          </div>
         </div>
       )}
 
@@ -113,40 +116,35 @@ function Game({ onGameEnd }) {
           <span> </span>
           <span>Tiempo: {timeLeft}</span>
         </div>
-        {/* 3. AÑADIMOS UN BOTÓN DE PAUSA EN LA BARRA SUPERIOR PARA ACTIVAR EL MENÚ */}
         <button onClick={togglePause} className="pause-button">
           Pausa
         </button>
       </div>
       
+      <div className="scenario" style={{ backgroundImage: `url(${levelData?.background})` }}>
+        {targets.map((target) => (
+          <div
+            key={target.id}
+            data-testid="target-element"
+            className={`target ${target.direction}`}
+            style={{
+              backgroundImage: `url(${target.image})`,
+              top: `${target.y}%`,
+              animationDuration: `${target.duration}s`,
+            }}
+            onClick={() => handleTargetClick(target)}
+            onAnimationEnd={handleTargetMiss}
+          />
+        ))}
 
-      <div className="scenario" style={{ backgroundImage: `url(${scenarioImg})` }}>
-      {targets.map((target) => (
-        <div
-          key={target.id}
-          data-testid="target-element"
-          className={`target ${target.direction}`}
-          style={{
-            backgroundImage: `url(${target.image})`,
-            top: `${target.y}%`,
-            animationDuration: `${target.duration}s`,
-          }}
-          onClick={() => handleTargetClick(target)}
-          onAnimationEnd={handleTargetMiss}
+        <div 
+          data-testid="gun-element"
+          className="player-gun" 
+          style={{ backgroundImage: `url(${gunImg})`, ...gunStyle }} 
         />
-      ))}
-
-      
-      <div 
-        data-testid="gun-element"
-        className="player-gun" 
-        style={{ backgroundImage: `url(${gunImg})`, ...gunStyle }} 
-      />
+      </div>
     </div>
-  </div>
   );
-
-
 }
 
 export default Game;
