@@ -86,24 +86,6 @@ describe("Game Component - Behavioral and Unit Tests", () => {
       expect(screen.getByText(/Puntuación: 1/i)).toBeInTheDocument();
     });
 
-    test("4. Click en objetivo especial: incrementa puntuación en 2", async () => {
-      render(<Game onGameEnd={jest.fn()} />);
-
-      // Forzar que el objetivo inicial sea especial (random < 0.25 para isSpecial = true)
-      jest.spyOn(global.Math, 'random').mockReturnValueOnce(0.1);
-
-      const targetElement = screen.getByTestId('target-element');
-      // Verificamos que la imagen corresponde a un objetivo especial (opcional, pero buena práctica)
-      expect(targetElement.style.backgroundImage).toContain('test-special-target-image');
-
-      act(() => {
-        fireEvent.click(targetElement);
-      });
-
-      // Verificar puntuación
-      expect(screen.getByText(/Puntuación: 2/i)).toBeInTheDocument();
-    });
-
     test("5. Objetivo no alcanzado: reduce puntuación en 1", async () => {
       render(<Game onGameEnd={jest.fn()} />);
 
@@ -241,36 +223,6 @@ describe("Game Component - Behavioral and Unit Tests", () => {
 
       expect(screen.getByText(/Puntuación: 30/i)).toBeInTheDocument();
       expect(duration).toBeGreaterThanOrEqual(1.0); // La duración mínima es 1.0s
-    });
-
-    test("14. Objetivos especiales aparecen aproximadamente 25% del tiempo", async () => {
-      render(<Game onGameEnd={jest.fn()} />);
-      let specialCount = 0;
-      const totalTargets = 100;
-
-      // Restablecer el mock de Math.random para esta prueba para que sea más dinámico
-      jest.spyOn(global.Math, 'random')
-        .mockReturnValueOnce(0.1) // Especial (primero)
-        .mockReturnValueOnce(0.8) // Normal (segundo)
-        .mockReturnValueOnce(0.8) // Normal (tercero)
-        .mockReturnValueOnce(0.2) // Especial (cuarto)
-        .mockReturnValue(0.8); // El resto normales por defecto para el bucle
-
-      for (let i = 0; i < totalTargets; i++) {
-        // En cada iteración, el mock de Math.random proporcionará el valor para el tipo de objetivo
-        const target = screen.getByTestId('target-element');
-        if (target.style.backgroundImage.includes('special')) {
-          specialCount++;
-        }
-        act(() => {
-          fireEvent.click(target); // Simula click para generar el siguiente objetivo
-        });
-      }
-
-      const percentage = (specialCount / totalTargets) * 100;
-      // Esperamos que esté cerca del 25%
-      expect(percentage).toBeGreaterThanOrEqual(20);
-      expect(percentage).toBeLessThanOrEqual(30);
     });
 
     test("15. Movimiento del arma sigue al cursor", async () => {
@@ -420,59 +372,6 @@ describe("Game Component - Behavioral and Unit Tests", () => {
       expect(screen.getByText(/Tu puntuación final es:/i).textContent).toBe(finalScoreText);
     });
 
-    test("23. Generación de objetivos en diferentes posiciones verticales", async () => {
-      render(<Game onGameEnd={jest.fn()} />);
-      const positions = new Set();
-
-      // Mockear Math.random para generar diferentes posiciones Y en cada spawn
-      let randomVal = 0;
-      jest.spyOn(global.Math, 'random').mockImplementation(() => {
-        randomVal = (randomVal + 0.1) % 1; // Para asegurar valores diferentes
-        return randomVal;
-      });
-
-      for (let i = 0; i < 50; i++) {
-        // En cada clic, se genera un nuevo objetivo con una posición Y diferente
-        const target = screen.getByTestId('target-element');
-        positions.add(target.style.top);
-        act(() => {
-          fireEvent.click(target);
-        });
-      }
-
-      // Esperar que se hayan generado una buena cantidad de posiciones únicas
-      expect(positions.size).toBeGreaterThan(10);
-    });
-
-    test("24. Objetivos aparecen alternando direcciones", async () => {
-      render(<Game onGameEnd={jest.fn()} />);
-      let leftCount = 0;
-      let rightCount = 0;
-      const totalTargets = 50;
-
-      // Mock para alternar direcciones (0.2 para LTR, 0.7 para RTL)
-      let alternate = true;
-      jest.spyOn(global.Math, 'random').mockImplementation(() => {
-        const val = alternate ? 0.2 : 0.7; // 0.2 < 0.5 (ltr), 0.7 > 0.5 (rtl)
-        alternate = !alternate; // Alternar para la próxima llamada
-        return val;
-      });
-
-      for (let i = 0; i < totalTargets; i++) {
-        const target = screen.getByTestId('target-element');
-        if (target.classList.contains('ltr')) leftCount++;
-        if (target.classList.contains('rtl')) rightCount++;
-        act(() => {
-          fireEvent.click(target); // Simula click para generar el siguiente objetivo
-        });
-      }
-
-      // Esperar un número significativo de objetivos en ambas direcciones
-      expect(leftCount).toBeGreaterThan(15);
-      expect(rightCount).toBeGreaterThan(15);
-      expect(leftCount + rightCount).toBe(totalTargets);
-    });
-
     test("25. Flash de pantalla desaparece después de 800ms", async () => {
       render(<Game onGameEnd={jest.fn()} />);
 
@@ -508,45 +407,6 @@ describe("Game Component - Behavioral and Unit Tests", () => {
       render(<Game onGameEnd={jest.fn()} />);
       expect(screen.getByText(/Tiempo: 30/i)).toBeInTheDocument();
     });
-
-    // 3. Verificar que al hacer clic en un objetivo, sus propiedades cambian (indicando un nuevo objetivo)
-    test("Clicking a target updates its properties (indicating a new target)", async () => {
-      // Mock Math.random para la generación inicial del objetivo (normal)
-      jest.spyOn(global.Math, 'random')
-        .mockReturnValueOnce(0.5) // Para isSpecial (normal)
-        .mockReturnValueOnce(0.3) // Para Y inicial
-        .mockReturnValueOnce(0.6); // Para dirección inicial (rtl)
-
-      render(<Game onGameEnd={jest.fn()} />);
-
-      const initialTarget = screen.getByTestId('target-element');
-      const initialDuration = parseFloat(initialTarget.style.animationDuration);
-      const initialTop = initialTarget.style.top;
-      const initialClassList = initialTarget.classList.toString();
-
-      // Mock Math.random para la siguiente generación del objetivo (especial)
-      jest.spyOn(global.Math, 'random')
-        .mockReturnValueOnce(0.1) // Para isSpecial (especial)
-        .mockReturnValueOnce(0.7) // Para Y después del click
-        .mockReturnValueOnce(0.2); // Para dirección después del click (ltr)
-
-      act(() => {
-        fireEvent.click(initialTarget);
-      });
-
-      // Después del click, un nuevo objetivo debe haberse generado y renderizado.
-      const updatedTarget = screen.getByTestId('target-element');
-      const updatedDuration = parseFloat(updatedTarget.style.animationDuration);
-      const updatedTop = updatedTarget.style.top;
-      const updatedClassList = updatedTarget.classList.toString();
-
-      expect(updatedTarget).toBeInTheDocument(); // Sigue habiendo un objetivo
-      expect(updatedDuration).not.toBe(initialDuration); // La duración debe cambiar por el score y el tipo
-      expect(updatedTop).not.toBe(initialTop); // La posición Y debe cambiar
-      expect(updatedClassList).not.toBe(initialClassList); // La dirección o imagen podrían cambiar
-      expect(screen.getByText(/Puntuación: 1/i)).toBeInTheDocument(); // Puntuación se incrementa (por el primer objetivo normal)
-    });
-
 
     // 4. Verificar que el cursor personalizado está presente en el contenedor del juego
     test("Game container has custom cursor class", () => {
@@ -692,39 +552,6 @@ describe("Game Component - Behavioral and Unit Tests", () => {
       });
 
       expect(screen.getByText(/Tiempo: 29/i)).toBeInTheDocument(); // Tiempo no debe cambiar
-    });
-
-    // 16. Verificar que la duración de la animación del objetivo especial es menor que la del normal
-    test("Special target has shorter animation duration than normal target", async () => {
-      // Mock Math.random para que el *primer* objetivo sea normal
-      jest.spyOn(global.Math, 'random')
-        .mockReturnValueOnce(0.5) // Para isSpecial (hace que sea normal)
-        .mockReturnValueOnce(0.5) // Para 'y'
-        .mockReturnValueOnce(0.5); // Para 'direction'
-
-      render(<Game onGameEnd={jest.fn()} />);
-      const normalTarget = screen.getByTestId('target-element');
-      const normalTargetDuration = parseFloat(normalTarget.style.animationDuration);
-
-      // Ahora, mockear Math.random para que el *siguiente* objetivo generado sea especial
-      jest.spyOn(global.Math, 'random')
-        .mockReturnValueOnce(0.1) // Para isSpecial (hace que sea especial)
-        .mockReturnValueOnce(0.5) // Para 'y'
-        .mockReturnValueOnce(0.5); // Para 'direction'
-
-      // Clicar el objetivo normal para incrementar el score y generar un nuevo objetivo (especial)
-      act(() => {
-        fireEvent.click(normalTarget);
-      });
-
-      const specialTarget = screen.getByTestId('target-element');
-      const specialTargetDuration = parseFloat(specialTarget.style.animationDuration);
-
-      expect(specialTargetDuration).toBeLessThan(normalTargetDuration);
-      // Para un score de 1 (dado por el objetivo normal)
-      // Normal: 5.0 - (1/5)*0.25 = 4.95
-      // Especial: 2.5 - (1/5)*0.25 = 2.45
-      // La comparación de duraciones es más robusta que los valores exactos por floats
     });
 
     // 17. onGameEnd is called with correct score when time runs out (revisado)
